@@ -28,4 +28,10 @@
     <ProjectReference Include="..\Vasis.Erp.Facil.Integracoes.ZeusMdfe\Vasis.Erp.Facil.Integracoes.ZeusMdfe.csproj" />
     <ProjectReference Include="..\Vasis.Erp.Facil.Shared\Vasis.Erp.Facil.Shared.csproj" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
 </Project>
