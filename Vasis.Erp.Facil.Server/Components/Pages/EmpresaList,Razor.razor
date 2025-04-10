@@ -1,0 +1,58 @@
+﻿@page "/empresas"
+
+@inject EmpresaService EmpresaService
+@inject NavigationManager Navigation
+
+<h3>Empresas</h3>
+
+<button @onclick="Criar">Nova Empresa</button>
+
+@if (empresas == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Razão Social</th>
+                <th>CNPJ</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var empresa in empresas)
+            {
+                <tr>
+                    <td>@empresa.RazaoSocial</td>
+                    <td>@empresa.Cnpj</td>
+                    <td>
+                        <button @onclick="() => Editar(empresa.Id)">Editar</button>
+                        <button @onclick="() => Excluir(empresa.Id)">Excluir</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Empresa>? empresas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        empresas = await EmpresaService.GetAllAsync();
+    }
+
+    void Criar() => Navigation.NavigateTo("/empresas/novo");
+    void Editar(int id) => Navigation.NavigateTo($"/empresas/{id}");
+
+    async Task Excluir(int id)
+    {
+        if (await EmpresaService.DeleteAsync(id))
+        {
+            empresas = await EmpresaService.GetAllAsync();
+        }
+    }
+}

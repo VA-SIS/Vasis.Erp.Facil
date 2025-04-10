@@ -1,31 +1,52 @@
+using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Vasis.Erp.Facil.Server.Components;
+using Vasis.Erp.Facil.Server.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add MudBlazor services
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// MudBlazor
 builder.Services.AddMudServices();
 
-// Add services to the container.
+// Entity Framework Core - SQL Server
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Razor + Blazor Server + WebAssembly
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents()
+    .AddInteractiveWebAssemblyComponents()
+    .AddAdditionalAssemblies(typeof(Vasis.Erp.Facil.Client._Imports).Assembly);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+// Configuração do ambiente
+if (app.Environment.IsDevelopment())
+{
+    app.UseWebAssemblyDebugging();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+// Mapear a API
+app.MapControllers();
+
+// Mapear os componentes .razor
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .AddInteractiveWebAssemblyRenderMode();
 
 app.Run();

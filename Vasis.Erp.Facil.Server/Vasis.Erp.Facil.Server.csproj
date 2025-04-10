@@ -20,18 +20,20 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="MudBlazor" Version="7.*" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.0" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <ProjectReference Include="..\Vasis.Erp.Facil.Client\Vasis.Erp.Facil.Client\Vasis.Erp.Facil.Client.csproj" />
     <ProjectReference Include="..\Vasis.Erp.Facil.Integracoes.ZeusMdfe\Vasis.Erp.Facil.Integracoes.ZeusMdfe.csproj" />
     <ProjectReference Include="..\Vasis.Erp.Facil.Shared\Vasis.Erp.Facil.Shared.csproj" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Services\" />
   </ItemGroup>
 </Project>

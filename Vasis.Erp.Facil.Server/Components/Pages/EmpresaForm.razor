@@ -1,0 +1,53 @@
+﻿@page "/empresas/{Id:int?}"
+
+@using Microsoft.AspNetCore.Components.Forms
+@using Vasis.Erp.Facil.Client.Services
+@using Vasis.Erp.Facil.Shared.Entities
+
+@inject EmpresaService EmpresaService
+@inject NavigationManager Navigation
+
+<h3>@(empresa.Id == 0 ? "Nova Empresa" : "Editar Empresa")</h3>
+
+<EditForm Model="empresa" OnValidSubmit="Salvar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <label>Razão Social</label>
+    <InputText @bind-Value="empresa.RazaoSocial" />
+
+    <label>CNPJ</label>
+    <InputText @bind-Value="empresa.Cnpj" />
+
+    <button>Salvar</button>
+    <button @onclick="Voltar">Cancelar</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    private Empresa empresa = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id is > 0)
+        {
+            var existente = await EmpresaService.GetByIdAsync(Id.Value);
+            if (existente is not null)
+                empresa = existente;
+        }
+    }
+
+    async Task Salvar()
+    {
+        var sucesso = empresa.Id == 0
+            ? await EmpresaService.CreateAsync(empresa)
+            : await EmpresaService.UpdateAsync(empresa);
+
+        if (sucesso)
+            Navigation.NavigateTo("/empresas");
+    }
+
+    void Voltar() => Navigation.NavigateTo("/empresas");
+}
